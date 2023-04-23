@@ -8,19 +8,6 @@ This is my Percona GTID Test Lab. I use this to test out Percona GTID replicatio
 - VirtualBox
 - ssh-audits - https://github.com/ChaosHour/ssh-audits/tree/feature/protected-priv-key
 
-## Setup
-```bash
-You will need to adjust the Vagrantfile to use your own ip and NicCard:
-proxysql.vm.network :public_network, :ip => "10.8.0.150", :bridge => "en6: AX88179A", :use_dhcp_assigned_default_route => true
-                                      Changeme ^               Changeme ^
-
-Also some variables for the user and password to be seeded into the VMs:
-NEW_USER_NAME = "klarsen"
-            changeme ^
-NEW_USER_PASSWORD = "ou812"
-            changeme ^
-```
-
 
 ## How to use
 Clone this repo
