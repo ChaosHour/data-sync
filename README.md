@@ -6,7 +6,10 @@ This is my Percona GTID Test Lab. I use this to test out Percona GTID replicatio
 - Ansible
 - VirtualBox
 - ssh-audits
-Use this branch as it can read and use the Ansible inventory file https://github.com/ChaosHour/ssh-audits/tree/feature/protected-priv-key
+- Use this branch as it can read and use the Ansible inventory file https://github.com/ChaosHour/ssh-audits/tree/feature/protected-priv-key
+- You will need to adjust the Vagrantfile to use your own ip and NicCard:
+- proxysql.vm.network :public_network, :ip => "10.8.0.150", :bridge => "en6: AX88179A", :use_dhcp_assigned_default_route => true
+                                      Changeme ^               Changeme ^
 
 
 ## How to use
