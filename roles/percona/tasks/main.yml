@@ -1,0 +1,50 @@
+---
+#
+# main.yml - Playbook to add repo's and install Percona server, and setup dirs.
+#
+
+  - include_tasks: pre-install.yml
+
+  
+  - name: Enable percona
+    ansible.builtin.shell: echo "y" | percona-release setup ps80
+
+  - name: Set the MySQL root password for the server
+    ansible.builtin.shell:  | 
+      /bin/echo "percona-server-server percona-server-server/root_password password {{ mysql_root_pass }}" | debconf-set-selections
+      /bin/echo "percona-server-server percona-server-server/root-password_again password {{ mysql_root_pass }}" | debconf-set-selections
+      /bin/echo "percona-server-server percona-server-server/root-pass password {{ mysql_root_pass }}" | debconf-set-selections
+      /bin/echo "percona-server-server percona-server-server/re-root-pass password {{ mysql_root_pass }}" | debconf-set-selections
+    when: ansible_hostname != "proxysql"
+
+  - name: Install Percona
+    ansible.builtin.apt:
+      name:
+        - percona-server-server
+        - percona-server-client
+      state: present
+    when: ansible_hostname != "proxysql"
+
+  - name: Install Percona | ProxySQL
+    ansible.builtin.apt:
+      name:
+        - percona-server-client
+      state: present
+    when: ansible_hostname == "proxysql"
+
+  - name: Build and Copy my dot cnf
+    ansible.builtin.template:
+      src: templates/my.cnf.j2
+      dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+      owner: root
+      group: root
+      mode: 0644
+    tags: b1
+    when: ansible_hostname != "proxysql"
+    notify: 
+    - Restart MySQL
+
+
+  - meta: flush_handlers
+  - include_tasks: post-install.yml
+    tags: g3

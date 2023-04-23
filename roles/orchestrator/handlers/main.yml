@@ -1,0 +1,18 @@
+---
+#
+# main.yml - handlers  to start, stop, and restart services.
+#
+
+- name: Start Orchestrator
+  ansible.builtin.systemd:
+    name: orchestrator
+    state: started
+    enabled: true
+  when: ansible_hostname == "orchestrator"
+
+- name: Restart Orchestrator
+  ansible.builtin.systemd:
+    name: orchestrator
+    state: restarted
+    enabled: true
+  when: ansible_hostname == "orchestrator"

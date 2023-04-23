@@ -1,0 +1,68 @@
+---
+#
+# proxysql.yml - Playbook to install and configure proxysql
+#
+
+
+# - name: Install yum4
+#   ansible.builtin.apt:
+#     name: yum4
+#     state: present
+#  when: ansible_hostname == "proxysql"
+
+
+- name: Download proxysql with check (sha256)
+  ansible.builtin.get_url:
+    url: https://github.com/sysown/proxysql/releases/download/v2.4.4/proxysql_2.4.4-ubuntu22_amd64.deb
+    dest: /tmp/proxysql_2.4.4-ubuntu22_amd64.deb
+    mode: '0644'
+    checksum: sha256:92d6cb7e1e53381d2ee2efc207bb1465b58e539987fa87071dbaf9facbb18d23
+    
+
+- name: Install proxysql
+  ansible.builtin.apt:
+    deb: /tmp/proxysql_2.4.4-ubuntu22_amd64.deb
+    state: present
+  when: ansible_hostname == "proxysql"
+  
+
+- name: Copy .my.cnf file with root password credentials
+  ansible.builtin.template:
+    src: roles/proxysql/templates/.my.cnf-proxysql.j2
+    dest: /root/.my.cnf
+    owner: root
+    mode: 0600
+  when: ansible_hostname == "proxysql"
+
+- name: Copy Rules To Proxy Server
+  ansible.builtin.copy:
+    src: files/rules.sql
+    dest: /tmp
+    mode: '0644'
+  when: ansible_hostname == "proxysql"
+  notify:
+    - Start ProxySQL
+
+- name: Start ProxySQL2
+  ansible.builtin.command: 
+    service proxysql start
+    
+- name: Run handler now
+  meta: flush_handlers
+
+- name: Load rules to proxy server
+  ansible.builtin.wait_for:
+    port: 6032
+    delay: 10
+  when: ansible_hostname == "proxysql"
+  notify:
+    - Restart ProxySQL
+
+- name: Run second handler now
+  meta: flush_handlers   
+    
+- name: Apply proxy rules to proxysql server
+  ansible.builtin.shell:
+    mysql -u admin -p{{ proxysql_admin_pass }} -h 127.0.0.1 -P6032 < /tmp/rules.sql
+  when: ansible_hostname == "proxysql"
+  failed_when: false
