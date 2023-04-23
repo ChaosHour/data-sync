@@ -978,6 +978,5 @@ primary:3306      [0s,ok,8.0.32-24,rw,ROW,>>,GTID]
 + replica:3306    [0s,ok,8.0.32-24,ro,ROW,>>,GTID]
 ```
 
-Add a picture called Orchestrator-dashboard.png of the output of the program here
 
-###![Alt text](screenshots/Orchestrator-dashboard.png?raw=true "Orchestrator Dashboard")
+![Alt text](screenshots/Orchestrator-dashboard.png?raw=true "Orchestrator Dashboard")
