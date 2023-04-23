@@ -11,11 +11,12 @@ Use this branch as it can read and use the Ansible inventory file https://github
 
 ## How to use
 Clone this repo
-Run `vagrant status` to see the status of the VMs
-Run `vagrant up` to start the VMs
-Run `ansible -i inventory all -m ping` to verify the VMs are up and running
-Run `ansible-playbook -i inventory --vault-id percona@password_file build.yml` to provision the VMs
+- Run `vagrant status` to see the status of the VMs
+- Run `vagrant up` to start the VMs
+- Run `ansible -i inventory all -m ping` to verify the VMs are up and running
+- Run `ansible-playbook -i inventory --vault-id percona@password_file build.yml` to provision the VMs
 
+>
 The reason I don't use `vagrant provision` is because I want to provision the VMs as if I were doing it in production.
 
 ## VMs
@@ -979,4 +980,4 @@ primary:3306      [0s,ok,8.0.32-24,rw,ROW,>>,GTID]
 
 Add a picture called Orchestrator-dashboard.png of the output of the program here
 
-###![Alt text](https:///screenshots/Orchestrator-dashboard.png?raw=true "Orchestrator Dashboard")
+###![Alt text](screenshots/Orchestrator-dashboard.png?raw=true "Orchestrator Dashboard")
