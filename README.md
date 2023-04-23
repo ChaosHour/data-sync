@@ -992,4 +992,5 @@ primary:3306      [0s,ok,8.0.32-24,rw,ROW,>>,GTID]
 ```
 
 
-![Alt text](screenshots/Orchestrator-dashboard.png?raw=true "Orchestrator Dashboard")
+### Orchestrator dashboard
+<img src="screenshots/Orchestrator-dashboard.png" width="853" height="520">
