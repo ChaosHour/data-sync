@@ -22,6 +22,5 @@ L1=(mysql_root_pass mysql_repl_pass chaos_pass proxysql_admin_pass sstuser_pass 
 for i in ${L1}
   do
     ansible 'localhost,' -m ansible.builtin.debug -a var=${i} -e "@vars/main.yml" --vault-id percona@password_file
-    #ansible 'localhost,' -m ansible.builtin.debug -a var=${i} -e "@test2.yml" --vault-id percona@password_file
 done
 
