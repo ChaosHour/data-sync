@@ -1,0 +1,108 @@
+# {{ ansible_managed }}
+# Local modifications will be overwritten.
+# This file is only concerned with core filesystem layout and server role and identification
+# Everything else is included from per-section conf files in the conf.d directory
+
+[client]
+port            = 3306
+socket          = {{ mysql_socket }}
+#default_character_set = utf8
+
+[mysqld_safe]
+nice            = 0
+pid-file        = /var/run/mysqld/mysqld.pid
+
+[mysqld]
+user            = mysql
+#bind_address    = 0.0.0.0
+socket          = /var/run/mysqld/mysqld.sock
+pid-file        = /var/run/mysqld/mysqld.pid
+port            = 3306
+datadir         = /var/lib/mysql
+#tmpdir          = /db/tmp01:/db/tmp02:/db/tmp03
+log-error       = /var/log/mysql/error.log
+innodb_file_per_table = ON
+#collation_server     = utf8_general_ci
+#character_set_server = utf8
+log_bin          = /var/lib/mysql/mysql-bin
+max_allowed_packet = 32M
+
+
+server_id                               =  {{ replication_server_id }}
+
+
+#GTID Stuff
+#log-bin=mysql-bin
+#binlog_format=mixed
+#gtid-mode=on
+#enforce-gtid-consistency
+#log-slave-updates
+
+#server-id = 1
+#log-bin = mysql-bin
+#binlog_format = row
+#gtid-mode=ON
+#enforce-gtid-consistency
+#log-slave-updates
+
+#server-id = 2
+#log-bin = mysql-bin
+#relay-log = relay-log-server
+#relay-log = relay-log-server
+#read-only = ON
+#gtid-mode=ON
+#enforce-gtid-consistency
+#log-slave-updates
+
+#gtid_mode=ON
+#enforce-gtid-consistency=ON
+#log-replica-updates=ON
+#skip-replica-start=ON
+
+# Replication
+relay_log        = /var/lib/mysql/mysql-relay-bin
+relay_log_index  = /var/lib/mysql/mysql-relay-index
+
+[mysqldump]
+quote-names
+quick
+
+
+[mysqld]
+skip_name_resolve
+binlog_format = ROW
+sync_binlog = 0
+innodb_data_home_dir = /var/lib/mysql
+relay_log_info_repository = TABLE 
+relay_log_recovery = ON
+sync_master_info = 1 
+sync_relay_log_info = 1 
+
+
+{% if replicate_ignore_table is defined %}
+  replicate_ignore_table={{replicate_ignore_table}}
+{% endif %}
+
+{% if 'primary' in ansible_hostname %}
+#innodb_support_xa                       = 1
+#log-bin=mysql-bin
+#binlog_format=ROW
+gtid-mode=on
+enforce-gtid-consistency
+log-slave-updates
+local_infile=1
+secure-file-priv="" 
+{% endif %}
+
+{% if 'primary' not in ansible_hostname %}
+read_only
+#log-bin=mysql-bin
+#binlog_format=ROW
+gtid-mode=on
+enforce-gtid-consistency
+log-slave-updates
+{% endif %}
+
+{% if replicate_ignore_table is defined %}
+  replicate_ignore_table                = {{replicate_ignore_table}}
+{% endif %}

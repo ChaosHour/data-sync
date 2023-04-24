@@ -1,0 +1,18 @@
+---
+#
+# main.yml - handlers  to start, stop, and restart services.
+#
+
+- name: Start ProxySQL
+  ansible.builtin.service:
+    name: proxysql
+    state: started
+    enabled: true
+  when: ansible_hostname == "proxysql"
+
+- name: Restart ProxySQL
+  ansible.builtin.service:
+    name: proxysql
+    state: restarted
+    enabled: true
+  when: ansible_hostname == "proxysql"

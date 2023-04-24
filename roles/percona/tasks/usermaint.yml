@@ -1,0 +1,111 @@
+---
+#
+# usermaint.yml - Playbook for system-level users
+#
+
+
+  - name: Set root password
+    community.mysql.mysql_user:
+      name: root
+      password: "{{ mysql_root_pass }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags: user1
+    when: ansible_hostname == "primary" or ansible_hostname == "replica" or ansible_hostname == "etlreplica"
+
+  - name: Create proxy User
+    community.mysql.mysql_user:
+      name: proxy
+      password: "{{ proxysql_hash }}"
+      priv: "*.*:SELECT"
+      host: "{{ host_subnet }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags: user
+    when: ansible_hostname == "primary" or ansible_hostname == "replica" or ansible_hostname == "etlreplica"
+
+  - name: Create Orchestrator User
+    community.mysql.mysql_user:
+      name: orchestrator
+      password: "{{ orchestrator_hash }}"
+      encrypted: yes
+      priv: "*.*:SUPER,PROCESS,REPLICATION SLAVE,RELOAD/mysql.slave_master_info:SELECT"
+      host: "{{ item }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    loop:
+      - "{{ host_subnet }}"
+      - "{{ host_subnet2 }}"
+    tags: user
+    when: ansible_hostname == "primary" or ansible_hostname == "replica" or ansible_hostname == "etlreplica" or ansible_hostname == "orchestrator" 
+
+  - name: Create Replication User
+    community.mysql.mysql_user:
+      name: repl
+      password: "{{ mysql_repl_hash }}"
+      encrypted: yes
+      priv: "*.*:REPLICATION SLAVE"
+      host: "{{ host_subnet }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags: user
+    when: ansible_hostname == "primary" or ansible_hostname == "replica" or ansible_hostname == "etlreplica"
+
+  - name: Create chaos user
+    community.mysql.mysql_user:
+      name: chaos
+      password: "{{ chaos_hash }}"
+      encrypted: yes
+      priv: "test.*:ALL"
+      host: "{{ host_subnet }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags: user
+    when: ansible_hostname == "primary" or ansible_hostname == "replica" or ansible_hostname == "etlreplica"
+
+  - name: Add sstuser  user to all servers
+    community.mysql.mysql_user:
+      name: sstuser
+      password: "{{ sstuser_hash }}"
+      encrypted: yes
+      priv: "*.*:REPLICATION CLIENT,RELOAD,LOCK TABLES"
+      host: "{{ host_subnet2 }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags: user
+    when: ansible_hostname == "primary" or ansible_hostname == "replica" or ansible_hostname == "etlreplica"
+
+  - name: Add monuser user to all servers
+    community.mysql.mysql_user:
+      name: monuser
+      password: "{{ monuser_hash }}"
+      encrypted: yes
+      priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
+      host: "{{ item }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    loop:
+      - "{{ host_subnet }}"
+      - "{{ host_subnet2 }}"
+    tags: user
+    when: ansible_hostname == "primary" or ansible_hostname == "replica" or ansible_hostname == "etlreplica"
+
+  - name: Create dba_util user
+    community.mysql.mysql_user:
+      name: dba_util
+      password: "{{ dba_util_hash }}"
+      encrypted: yes
+      priv: "*.*:ALL"
+      host: "{{ open_host }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags: user
+    when: ansible_hostname == "primary" or ansible_hostname == "replica" or ansible_hostname == "etlreplica"

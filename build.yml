@@ -1,0 +1,27 @@
+---
+- name: Build Play
+  hosts: all
+  remote_user: vagrant
+  become: true
+  become_user: root
+  become_method: sudo
+  gather_facts: true
+# cacheable: true
+  vars_files:
+      - vars/main.yml
+  tasks:
+
+
+  pre_tasks:
+      []
+
+
+  roles:
+      - { role: percona, tags: ['percona'] }
+      - { role: proxysql, when: "ansible_hostname == 'proxysql'", tags: ['proxysql', 'prox'] }
+      - { role: orchestrator, when: "ansible_hostname == 'orchestrator'", tags: ['orchestrator', 'orc'] }
+      - { role: replication, when: "( ansible_hostname == 'replica' or ansible_hostname == 'etlreplica')", tags: ['repl'] }
+
+
+  post_tasks:
+      []
