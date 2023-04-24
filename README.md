@@ -979,4 +979,4 @@ primary:3306      [0s,ok,8.0.32-24,rw,ROW,>>,GTID]
 
 
 ### Orchestrator dashboard
-<img src="screenshots/Orchestrator-dashboard.png" width="453" height="320">
+<img src="screenshots/Orchestrator-dashboard.png" width="653" height="420">
