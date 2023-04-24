@@ -6,7 +6,8 @@ This is my Percona GTID Test Lab. I use this to test out Percona GTID replicatio
 - Vagrant
 - Ansible
 - VirtualBox
-- ssh-audits - https://github.com/ChaosHour/ssh-audits/tree/feature/protected-priv-key
+- [ssh-audits](https://github.com/ChaosHour/ssh-audits/tree/feature/protected-priv-key)
+
 
 
 ## How to use

@@ -21,6 +21,8 @@
 #          6339646132323565610a613636396463613762623834336530666130386139326438383134323036
 #          6235
 #
+# Put this in the test.txt file: 
+# L2=(ou812 slAv3 letmein admin s3cret monpass orc_pass Cheez9oo)
 ################################################################################################################################################
 L1=(mysql_root_pass mysql_repl_pass chaos_pass proxysql_admin_pass sstuser_pass monuser_pass orchestrator_pass dba_util_pass)
 source test.txt
