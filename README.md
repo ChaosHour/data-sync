@@ -11,6 +11,8 @@ This is my Percona GTID Test Lab. I use this to test out Percona GTID replicatio
 
 ## How to use
 Clone this repo
+- Run `touch password_file` and add this to the password file `p3rc0na`.  This to be used with the `--vault-id` option.
+- Run `touch secrets.yml` This is used with the Vagrantfile to set your user and password for the VMs.
 - Run `vagrant status` to see the status of the VMs
 - Run `vagrant up` to start the VMs
 - Run `ansible -i inventory all -m ping` to verify the VMs are up and running
