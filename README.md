@@ -13,11 +13,7 @@ This is my Percona GTID Test Lab. I use this to test out Percona GTID replicatio
 ## How to use
 Clone this repo
 - Run `touch password_file` and add this to the password file `p3rc0na`.  This to be used with the `--vault-id` option.
-- Run `touch secrets.yml` This is used with the Vagrantfile to set your user and password for the VMs.
-```yaml
-user: "youruser"
-pass: "yourpassword"
-```
+- Run `touch secrets.yml` This is used with the Vagrantfile to set your user and password for the VMs. See below for an example.
 - Run `vagrant status` to see the status of the VMs
 - Run `vagrant up` to start the VMs
 - Run `ansible -i inventory all -m ping` to verify the VMs are up and running
@@ -31,6 +27,29 @@ pass: "yourpassword"
 - `Primary`     - Percona MySQL 8
 - `Replica`     - Percona MySQL 8
 - `Etlreplica`  - Percona MySQL 8
+
+## Vagrantfile Notes
+- Run to get your Network interface `VBoxManage list bridgedifs` Mine is `:bridge => "en6: AX88179A",` 
+```ruby
+(data-sync) % VBoxManage list bridgedifs
+Name:            en6: AX88179A
+GUID:            00366d65-0000-0000-8000-a0cdc86a5386
+DHCP:            Disabled
+IPAddress:       10.x.x.x
+NetworkMask:     255.255.255.0
+IPV6Address:
+IPV6NetworkMaskPrefixLength: 0
+HardwareAddress: a0:ce:c8:6a:53:86
+MediumType:      Ethernet
+Wireless:        No
+Status:          Up
+VBoxNetworkName: HostInterfaceNetworking-en6
+```
+- Run `touch secrets.yml` This is used with the Vagrantfile to set your user and password for the VMs.
+```yaml
+user: "youruser"
+pass: "yourpassword"
+```
 
 ```bash
 klarsen@Mac-Book-Pro2 data-sync % vagrant status
