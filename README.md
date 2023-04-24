@@ -879,6 +879,11 @@ Because it gives me a chance to test the program and to see if it can be used in
 I use the following command to run the ssh-audits program:
 
 ```Go
+The commands.txt is used to run the commands on the remote hosts. I use it to validate the ssh-audits program.
+pwd; hostname
+ip a s enp0s8 | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2
+
+
 klarsen@Mac-Book-Pro2 ssh-audits % ./ssh-audits -i inventory/hosts hosts
 orchestrator
 [+] Connected to orchestrator
